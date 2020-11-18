@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${'Produktas: ' + product.getName()}"></title>
+</head>
+<body>
+    <p th:text="'Produkto pavadinimas: ' + ${product.getName()}"></p>
+    <p th:text="'Produkto kiekis: ' + ${product.getInStock()}"></p>
+    <label>
+        Aprašymas:
+        <br>
+        <textarea th:text="${product.getDescription()}" readonly></textarea>
+    </label>
+    <p th:text="'Produkto kaina: ' + ${product.getPrice()}"></p>
+    <p th:text="'Produkto ID: ' + ${product.getId()}"></p>
+</body>
+</html>
