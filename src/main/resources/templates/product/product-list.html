@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Produktų sąrašas</title>
+</head>
+<body>
+<th:block th:if="${products.isEmpty()}">
+    <p>Jūs neturite pridėtų produktų!</p>
+</th:block>
+
+<th:block th:if="${!products.isEmpty()}">
+    <table>
+        <tr>
+            <th>Pavadinimas</th>
+            <th>Kiekis</th>
+            <th>Kaina</th>
+        </tr>
+        <tr th:each="product : ${products}">
+            <td th:text="${product.getName()}"></td>
+            <td th:text="${product.getInStock()}"></td>
+            <td th:text="${product.getPrice()}"></td>
+            <td><a th:href="@{/product/edit-name/{id}(id=${product.getId()})}">Koreguoti pavadinimą</a></td>
+            <td><a th:href="@{/product/{id}(id=${product.getId()})}">Rodyti</a></td>
+            <td><a th:href="@{/product/delete/{id}(id=${product.getId()})}">Trinti</a></td>
+        </tr>
+    </table>
+</th:block>
+<a th:href="@{/product/new}">Kurti naują</a>
+</body>
+</html>

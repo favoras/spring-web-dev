@@ -1,0 +1,19 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Prideti nauja produktą</title>
+</head>
+<body>
+<h3>Pridėti naują produktą</h3>
+<form th:action="@{/product}" method="POST" th:object="${product}">
+    <label>Pavadinimas:</label>
+    <input type="text" th:field="*{name}" required /><br/>
+    <label>Likęs kiekis:</label>
+    <input type="number" th:field="*{inStock}" required /><br/>
+    <label>Kaina:</label>
+    <input type="number" th:field="*{price}" required /><br/>
+    <label>Aprašymas:</label>
+    <textarea th:field="*{description}" required></textarea><br/>
+    <input type="submit" value="Saugoti"/>
+</form>
+</body>
+</html>

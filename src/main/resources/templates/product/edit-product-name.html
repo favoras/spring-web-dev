@@ -1,0 +1,14 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Koreguoti produkto pavadinimą</title>
+</head>
+<body>
+<h3>Koreguoti produkto pavadinimą</h3>
+<form th:action="@{/product/edit-name}" method="POST" th:object="${product}">
+    <input type="hidden" th:field="*{id}" th:value="*{id}" >
+    <label>Pavadinimas:</label>
+    <input type="text" th:field="*{name}" th:value="*{name}" required /><br/>
+    <input type="submit" value="Saugoti"/>
+</form>
+</body>
+</html>

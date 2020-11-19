@@ -1,13 +1,11 @@
 package com.myspringweb.springwebapp.product.controller;
 
+import com.myspringweb.springwebapp.product.exception.ProductNotFoundException;
 import com.myspringweb.springwebapp.product.model.Product;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,18 +13,70 @@ import java.util.List;
 @RequestMapping("/product")
 public class ProductsController {
 
-    private List<Product> productList = new ArrayList<>();
+    List<Product> productList = new ArrayList<>();
+
 
     @GetMapping("/{id}")
     public String getSingleProduct(@PathVariable long id, Model model){
-        Product product = new Product(); // var product = new Product();
-        product.setId(id);
-        product.setName("Telefonas Samsung");
-        product.setDescription("Galingas Samsung Note 10 Plus telefonas");
-        product.setInStock(10);
-        product.setPrice(BigDecimal.valueOf(1299.99)); // setPrice(new BigDecimal("1299.99"));
-
-        model.addAttribute("product", product);
+        model.addAttribute("product", getProductById(id));
         return "product/single-product";
     }
+
+    @GetMapping
+    public String getAllProducts(Model model){
+        model.addAttribute("products", productList);
+        return "product/product-list";
+    }
+
+    @GetMapping("/new")
+    public String getNewProductForm(Model model){
+        model.addAttribute("product", new Product());
+        return "product/new-product";
+    }
+
+    @PostMapping
+    public String addProduct(@ModelAttribute("product") Product product){
+        long newId = 1;
+        if (!productList.isEmpty()){
+            newId = productList.get(productList.size() - 1).getId() + 1;
+        }
+        product.setId(newId);
+        productList.add(product);
+        return "redirect:/product";
+    }
+
+    @GetMapping("/edit-name/{id}")
+    public String getNewProductForm(@PathVariable long id,  Model model) {
+        Product product = getProductById(id);
+        model.addAttribute("product", product);
+        return "product/edit-product-name";
+    }
+
+    @PostMapping("/edit-name")
+    public String updateProductName(@ModelAttribute("product") Product product, Model model) {
+        Product oldProduct = getProductById(product.getId());
+        productList.remove(oldProduct);
+        product.setPrice(oldProduct.getPrice());
+        product.setInStock(oldProduct.getInStock());
+        product.setDescription(oldProduct.getDescription());
+        productList.add(product);
+        model.addAttribute("products", productList);
+        return "product/product-list";
+    }
+
+    @GetMapping("/delete/{id}")
+    public String deleteProduct(@PathVariable long id, Model model) {
+        Product product = getProductById(id);
+        productList.remove(product);
+        model.addAttribute("products", productList);
+        return "redirect:/product";
+    }
+
+    private Product getProductById(long id) {
+        return productList.stream()
+                .filter(p -> p.getId() == id)
+                .findFirst()
+                .orElseThrow(ProductNotFoundException::new);
+    }
+
 }
